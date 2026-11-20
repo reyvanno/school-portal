@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-
 import { useAuthStore } from "../stores/auth.store";
 
 import Lobby from "../views/Lobby.vue";
@@ -30,6 +29,7 @@ const router = createRouter({
       component: Dashboard,
       meta: {
         requiresAuth: true,
+        title: "Dashboard",
       },
     },
     {
