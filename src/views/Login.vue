@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { useAuthStore } from '../stores/auth.store'
+import AuthLayout from '../layouts/AuthLayout.vue'
 
 const nis = ref('')
 const password = ref('')
@@ -47,8 +48,7 @@ async function handleLogin() {
 </script>
 
 <template>
-  <main class="auth-page">
-    <section class="auth-card">
+  <AuthLayout>
 
       <RouterLink to="/" class="auth-brand">
         <span class="brand-mark">S</span>
@@ -144,6 +144,5 @@ async function handleLogin() {
         ← Kembali ke halaman utama
       </RouterLink>
 
-    </section>
-  </main>
+  </AuthLayout>
 </template>
