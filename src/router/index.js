@@ -1,47 +1,64 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "../stores/auth.store";
+import moduleRoutes from "../modules";
 
-import Lobby from "../views/Lobby.vue";
-import Login from "../views/Login.vue";
-import Dashboard from "../views/Dashboard.vue";
-import ConnectionTest from "../views/ConnectionTest.vue";
+import Lobby from "../pages/Lobby.vue";
+import Login from "../pages/Login.vue";
+import Dashboard from "../pages/Dashboard.vue";
+import ConnectionTest from "../pages/ConnectionTest.vue";
+
+const routes = [
+  {
+    path: "/",
+    name: "lobby",
+    component: Lobby,
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: Login,
+    meta: {
+      guestOnly: true,
+    },
+  },
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    component: Dashboard,
+    meta: {
+      requiresAuth: true,
+      title: "Dashboard",
+    },
+  },
+  {
+    path: "/connection-test",
+    name: "connection-test",
+    component: ConnectionTest,
+  },
+
+  // Route dari seluruh modul
+  ...moduleRoutes,
+
+  // Component Playground hanya tersedia saat development
+  ...(import.meta.env.DEV
+    ? [
+        {
+          path: "/dev/components",
+          name: "component-playground",
+          component: () => import("../dev/ComponentPlayground.vue"),
+        },
+      ]
+    : []),
+
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/",
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(),
-
-  routes: [
-    {
-      path: "/",
-      name: "lobby",
-      component: Lobby,
-    },
-    {
-      path: "/login",
-      name: "login",
-      component: Login,
-      meta: {
-        guestOnly: true,
-      },
-    },
-    {
-      path: "/dashboard",
-      name: "dashboard",
-      component: Dashboard,
-      meta: {
-        requiresAuth: true,
-        title: "Dashboard",
-      },
-    },
-    {
-      path: "/connection-test",
-      name: "connection-test",
-      component: ConnectionTest,
-    },
-    {
-      path: "/:pathMatch(.*)*",
-      redirect: "/",
-    },
-  ],
+  routes,
 
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition;
@@ -60,8 +77,6 @@ const router = createRouter({
 router.beforeEach(async (to) => {
   const auth = useAuthStore();
 
-  // Periksa session ketika membuka halaman yang membutuhkan autentikasi
-  // maupun halaman khusus pengunjung.
   if (to.meta.requiresAuth || to.meta.guestOnly) {
     const authenticated = await auth.ensureSession();
 
@@ -75,9 +90,7 @@ router.beforeEach(async (to) => {
     }
 
     if (to.meta.guestOnly && authenticated) {
-      return {
-        name: "dashboard",
-      };
+      return { name: "dashboard" };
     }
   }
 });

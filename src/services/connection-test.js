@@ -1,4 +1,4 @@
-import api from './api'
+import api from '@/api/client.js'
 
 export async function testOdooConnection() {
   const response = await api.get('/api/v1/auth/me', {
