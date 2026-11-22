@@ -5,6 +5,7 @@ import Lobby from "../views/Lobby.vue";
 import Login from "../views/Login.vue";
 import Dashboard from "../views/Dashboard.vue";
 import ConnectionTest from "../views/ConnectionTest.vue";
+import StudentApiTest from "@/modules/students/pages/StudentApiTest.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -36,6 +37,11 @@ const router = createRouter({
       path: "/connection-test",
       name: "connection-test",
       component: ConnectionTest,
+    },
+    {
+      path: "/student-api-test",
+      name: "student-api-test",
+      component: StudentApiTest,
     },
     {
       path: "/:pathMatch(.*)*",
